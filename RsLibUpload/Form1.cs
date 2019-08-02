@@ -1,28 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RsLibUpload
 {
     public partial class Form1 : Form
     {
+        //private JyDoc _doc;
         public Form1()
         {
             InitializeComponent();
         }
 
-        private  RsLibUpload m_Analysis;
+        private  Upload m_Analysis;
         private void button1_Click(object sender, EventArgs e)
         {
-            m_Analysis = new RsLibUpload();
+            m_Analysis = new Upload();
             OpenFileDialog dlg = new OpenFileDialog();      // 定义打开文件
             dlg.InitialDirectory = Application.StartupPath; // 初始路径,这里设置的是程序的起始位置，可自由设置    
             dlg.Filter = "All files (*.*)|*.*";             //（这是全部类型文件）
@@ -31,32 +25,55 @@ namespace RsLibUpload
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 textBox1.Text = dlg.FileName.ToString();    // 获得完整路径在textBox1中显示
-                
-                if (System.IO.Path.GetExtension(dlg.FileName)==".zip")
-                {
-                    // 解压zip压缩文件
-                    m_Analysis.Decompression(dlg.FileName);
 
-                    string extractPath = dlg.FileName + @".Extract";
-                    // 删除非指定文件格式文件
-                    m_Analysis.DeleteFile(extractPath, textBox3.Text.ToString());
-                    // 获取指定文件夹下所有文件的完整路径集合
-                    var list = m_Analysis.GetFilePath(extractPath);
-                   
-                    foreach (var file in list)
+                try
+                {
+                    if (Path.GetExtension(dlg.FileName) == ".zip")
                     {
-                        textBox2.Text += file + "\r\n";
-                    }
+                        // 解压zip压缩文件
+                        m_Analysis.Decompression(dlg.FileName);
 
-                    // 打开此目录
-                    //System.Diagnostics.Process.Start(dlg.FileName + @".Extract");
-                }          
-                else
+                        string extractPath = dlg.FileName + @".Extract";
+                        // 删除非指定文件格式文件
+                        m_Analysis.DeleteFile(extractPath, comboBox1.SelectedItem.ToString());
+                        // 获取指定文件夹下所有文件的完整路径集合
+                        // var list = m_Analysis.GetFilePath(extractPath);
+                        m_Analysis.GetAllFillPath(extractPath);
+                        textBox4.Text += m_Analysis.allFillPath[0];
+                        foreach (var file in m_Analysis.allFillPath)
+                        {
+                            textBox2.Text += file + "\r\n";
+                        }
+
+                        // 打开此目录
+                        //System.Diagnostics.Process.Start(dlg.FileName + @".Extract");
+                    }
+                    else
+                    {
+                        // 单文件
+                        // 从Jy文件中读取数据并构造 JyDoc 对象
+                        //_doc = new JyDoc(File.ReadAllBytes(path));
+                    }
+                }
+                catch
                 {
-                    // 单文件
 
                 }
             }
         }
+
+        /// <summary>
+        /// 读文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Read_Button_Click(object sender, EventArgs e)
+        {
+            var path = textBox4.Text.ToString();
+            // 从Jy文件中读取数据并构造 JyDoc 对象
+            //_doc = new JyDoc(File.ReadAllBytes(path));
+        }
+
+      
     }
 }

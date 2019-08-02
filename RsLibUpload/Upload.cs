@@ -4,8 +4,8 @@ using System.IO;
 using System.IO.Compression;
 
 namespace RsLibUpload
-{
-    public class RsLibUpload
+{   
+    public class Upload
     {
         /// <summary>
         /// 文件路径
@@ -27,11 +27,17 @@ namespace RsLibUpload
         /// </summary>
         public string extractPath { get; set; }
 
+        public List<string> allFillPath { get;set; }
+
+        /// <summary>
+        /// jy实例
+        /// </summary>
+        //private JyDoc _doc;
 
 
-        public RsLibUpload()
-        {      
-
+        public Upload()
+        {
+            allFillPath = new List<string>();
         }
         /// <summary>
         /// 获取文件格式
@@ -60,7 +66,7 @@ namespace RsLibUpload
             // 真实的文件类型
             fileExtension = bx;
             // 文件格式
-           fileFormat = System.IO.Path.GetExtension(path);
+            fileFormat = System.IO.Path.GetExtension(path);
             return fileFormat;
         }
 
@@ -109,12 +115,12 @@ namespace RsLibUpload
             if (!File.Exists(filePath))
                 return;
             // 指定解压路径
-             extractPath = filePath + @".Extract";
+            extractPath = filePath + @".Extract";
             if (!Directory.Exists(extractPath))
             {
                 // 解压 
                 ZipFile.ExtractToDirectory(filePath, extractPath);
-
+            
                 // 打开此目录
                 //System.Diagnostics.Process.Start(extractPath);
             }
@@ -126,7 +132,7 @@ namespace RsLibUpload
         /// <param name="filePath">指定文件夹路径</param>
         /// <param name="format">指定文件格式'.'</param>
         public void DeleteFile(string filePath,string format)
-        {
+        {     
             if (!Directory.Exists(filePath))
                 return;
             DirectoryInfo folder = new DirectoryInfo(filePath);
@@ -147,14 +153,46 @@ namespace RsLibUpload
         /// <returns></returns>
         public List<string> GetFilePath(string filePath)
         {
-            var path = new List<string>();
+            var path = new List<string>();         
             DirectoryInfo folder = new DirectoryInfo(filePath);
             FileInfo[] fileList = folder.GetFiles();
             foreach (FileInfo file in fileList)
-            {
-                path.Add(filePath + @"\" + file.Name);        
+            {        
+                path.Add(file.FullName);           
             }
             return path;
+        }
+
+        /// <summary>
+        /// 递归获取文件夹下所有的文件完整路径路径集合
+        /// </summary>
+        /// <param name="fillPath"></param>
+        public void GetAllFillPath(string fillPath)
+        {         
+            DirectoryInfo dir = new DirectoryInfo(fillPath);
+            FileInfo[] allFile = dir.GetFiles();
+            foreach (FileInfo fi in allFile)
+            {
+                allFillPath.Add(fi.FullName);
+            }
+            DirectoryInfo[] allDir = dir.GetDirectories();
+            foreach (DirectoryInfo d in allDir)
+            {
+                GetAllFillPath(d.FullName);
+            }      
+        }
+
+        public void ReadFile(string filePath)
+        {
+            try
+            {
+                // 从Jy文件中读取数据   
+                //_doc = new JyDoc(File.ReadAllBytes(filePath));         
+            }
+            catch (Exception ex)
+            {           
+              
+            }
         }
         
 
