@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RsLib;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Forms;
@@ -11,7 +12,10 @@ namespace RsLibUpload
         public Form1()
         {
             InitializeComponent();
+            comboBox1.SelectedIndex = 0;
         }
+        private JyDoc _doc;
+        private string extractPath;
 
         private  Upload m_Analysis;
         private void button1_Click(object sender, EventArgs e)
@@ -33,7 +37,7 @@ namespace RsLibUpload
                         // 解压zip压缩文件
                         m_Analysis.Decompression(dlg.FileName);
 
-                        string extractPath = dlg.FileName + @".Extract";
+                        extractPath = dlg.FileName + @".Extract";
                         // 删除非指定文件格式文件
                         m_Analysis.DeleteFile(extractPath, comboBox1.SelectedItem.ToString());
                         // 获取指定文件夹下所有文件的完整路径集合
@@ -52,7 +56,7 @@ namespace RsLibUpload
                     {
                         // 单文件
                         // 从Jy文件中读取数据并构造 JyDoc 对象
-                        //_doc = new JyDoc(File.ReadAllBytes(path));
+                        _doc = new JyDoc(File.ReadAllBytes(textBox4.Text.ToString()));
                     }
                 }
                 catch
@@ -68,12 +72,29 @@ namespace RsLibUpload
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Read_Button_Click(object sender, EventArgs e)
-        {
-            var path = textBox4.Text.ToString();
+        {          
             // 从Jy文件中读取数据并构造 JyDoc 对象
-            //_doc = new JyDoc(File.ReadAllBytes(path));
+             _doc = new JyDoc(File.ReadAllBytes(textBox4.Text.ToString()));
         }
 
-      
+        /// <summary>
+        /// 删除解压后文件夹
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // 删除整个文件夹
+            Directory.Delete(extractPath, true);
+
+            //// 删除文件
+            //string path = extractPath;
+            //DirectoryInfo di = new DirectoryInfo(path);
+            //FileAttributes attr = File.GetAttributes(path);
+            //if (di.Exists)
+            //{
+            //    Directory.Delete(path, true);
+            //}         
+        }
     }
 }
