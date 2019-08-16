@@ -29,7 +29,7 @@ namespace RsLibUpload
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 textBox1.Text = dlg.FileName.ToString();    // 获得完整路径在textBox1中显示
-
+                
                 try
                 {
                     if (Path.GetExtension(dlg.FileName) == ".zip")
