@@ -32,6 +32,35 @@ namespace RsLibUpload
                 
                 try
                 {
+                    /////////////////////////-调试-///////////////////////////////
+                    
+                    //// 读取文件流 Stream               
+                    //var stream = file.OpenReadStream();
+                    //using (var ms = new MemoryStream())
+                    //{
+                    //    stream.CopyTo(ms);
+                    //    ms.Position = 0; // rewind
+                    //    //using (var zipArchive = ZipFile.Open(upFile.FileFullName, ZipArchiveMode.Read))               
+                    //    using (var zipArchive = new ZipArchive(ms, ZipArchiveMode.Read))
+                    //    {
+                    //        foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                    //        {
+                    //            using (var stream1 = entry.Open())
+                    //            {
+                    //                byte[] fBytes = null;
+                    //                using (var br = new BinaryReader(stream1))
+                    //                {
+                    //                    // 文件流转换为byte[]
+                    //                    fBytes = br.ReadBytes((int)entry.CompressedLength);
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    /////////////////////////-调试-///////////////////////////////
+
+
                     if (Path.GetExtension(dlg.FileName) == ".zip")
                     {
                         // 解压zip压缩文件
